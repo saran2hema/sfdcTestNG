@@ -5,6 +5,8 @@
   <version>0.0.1-SNAPSHOT</version>
   <properties>
 		<log4jversion>2.18.0</log4jversion>
+	  <maven.compiler.source>3.13.0</maven.compiler.source>
+	  <maven.compiler.target>3.13.0</maven.compiler.target>
 	</properties>
 
 	<build>
