@@ -18,6 +18,7 @@ public class LoginPage extends BasePage {
 		super(driver);
 	}
 
+	
 	@FindBy(id="username")
 	public WebElement username;
 
@@ -32,12 +33,32 @@ public class LoginPage extends BasePage {
 
 	@FindBy(id="rememberUn")
 	public WebElement rememberMe;
-	
+
 	@FindBy(xpath="//div[@id='userNav']")
 	public WebElement userNavButton;
-	
+
 	@FindBy(xpath="//a[contains(text(),'Logout')]")
 	public WebElement logoutButton;
+
+	//Username field after logging out in login page
+	@FindBy(id="idcard-identity")
+	public WebElement rememberUsername;
+
+	@FindBy(xpath="//a[@id='forgot_password_link']")
+	public WebElement forgotPasswordlink;
+
+	@FindBy(xpath="//input[@id='un']")
+	public WebElement forgotUsername;
+
+	@FindBy (xpath="//input[@id='continue']")
+	public WebElement continueButton;
+
+	@FindBy(xpath="//div[@class='message']//p")
+	public WebElement resetMessage;
+
+
+	@FindBy (xpath="//div[@id='error']")
+	public WebElement loginErrorElement;
 
 	public boolean enterUsername(String username) {
 
