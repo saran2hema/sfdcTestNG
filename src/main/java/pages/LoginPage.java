@@ -33,34 +33,152 @@ public class LoginPage extends BasePage {
 	@FindBy(xpath="//a[contains(text(),'Logout')]")
 	public WebElement logoutButton;
 
+	public boolean enterUsername(String username) {
 
-	public void logintoSFDC(String email, String passWord) {
-		logger.info("Logging in to application");
-		this.username.sendKeys(email);
-		this.password.sendKeys(passWord);
-		this.loginButton.click();
-		logger.info("Should be signed in to application");
+		boolean usernameEntered=false;
+		this.username.clear();
+		this.username.sendKeys(username);
 
+		if(this.username.getAttribute("value").equals(username)) {
+			usernameEntered=true;
+			logger.info("Username is entered successfully");
+		}
+		return usernameEntered;
 	}
-	public void rememberMe() throws InterruptedException {
+	public boolean enterPassword(String password) {
+
+		boolean passwordEntered=false;
+		this.password.clear();
+		this.password.sendKeys(password);
+
+		if(this.password.getAttribute("value").equals(password)) {
+			passwordEntered=true;
+			logger.info("Password is entered successfully");
+		}
+		return passwordEntered;
+	}
+
+	public boolean clearPassword() {
+		boolean passwordCleared=false;
+
+		this.password.clear();
+
+		if(this.password.getAttribute("value").equals("")) {
+			passwordCleared=true;
+			logger.info("Password field is cleared");
+		}
+		return passwordCleared;
+	}
+
+	public boolean verifyLoginError(WebDriver driver) {
+		boolean loginError=false;
+
+		this.loginButton.click();
+
+		String actualErrorMessage=loginErrorMessage.getText();
+		String expectedErrorMessage="Please enter your password.";
+		if(actualErrorMessage.equals(expectedErrorMessage)) {
+			loginError=true;
+		}
+
+		return loginError;
+	}
+
+
+	public boolean logintoSFDC(String email, String passWord, WebDriver driver) throws InterruptedException {
+		logger.info("Logging in to application");
+		boolean verifiedLogin=false;
+		username.clear();
+		username.sendKeys(email);
+		password.clear();
+		password.sendKeys(passWord);
+		loginButton.click();
+		logger.info("Should be signed in to application");
+		
+		WebDriverWait wait =new WebDriverWait(driver, Duration.ofSeconds(10));
+		wait.until(ExpectedConditions.titleContains("Home"));
+
+		String title=driver.getTitle();
+		//System.out.println(title);
+		if(title.contains("Home")) {
+			verifiedLogin=true;
+		}
+		return verifiedLogin;
+	}
+	public boolean rememberMe() throws InterruptedException {
+		boolean remembermeSelected=false;
 
 		if(!rememberMe.isSelected()) {
 			rememberMe.click();
+			remembermeSelected=true;
 			logger.info("Remember me is clicked");
 		}
 
-		Thread.sleep(3000);
+		return remembermeSelected;
 	}
-	
-	public void logout() throws InterruptedException {
-		Thread.sleep(2000);
-	
+
+	public boolean logout(WebDriver driver) throws InterruptedException {
+		//Thread.sleep(2000);
+		boolean successLogout=false;
 		userNavButton.click();
-logger.info("Usermenu is clicked");
+		logger.info("Usermenu is clicked");
 		Thread.sleep(2000);
-		
 		logoutButton.click();
 		logger.info("User is logged out");
 		Thread.sleep(4000);
-}
+		String title=driver.getTitle();
+		System.out.println(title);
+		if(title.contains("Login")) {
+			successLogout=true;
+		}
+		return successLogout;
+	}
+
+	public boolean verifyUsernameRetained(String actualUsername) {
+		boolean usernameRetained=false;
+		String unameTxtbox=rememberUsername.getText();
+		if(unameTxtbox.equals(actualUsername)) {
+			usernameRetained=true;
+		}
+		return usernameRetained;
+	}
+	public boolean forgotPassword(WebDriver driver) {
+		boolean forgotPasswordClicked=false;
+		forgotPasswordlink.click();
+		if(driver.getTitle().contains("Forgot Your Password")) {
+			forgotPasswordClicked=true;
+		}
+		return forgotPasswordClicked;
+	}
+	public boolean verifyResetMessage(String forgotUname) {
+		boolean resettingMessage=false;
+
+		this.forgotUsername.sendKeys(forgotUname);
+		this.continueButton.click();
+
+		/*	if(this.forgotUsername.getAttribute("value").equals(forgotUname)) {
+			usernameEntered=true;
+			logger.info("Username for forgot password page is entered successfully");
+		}  */
+		String forgotMessage="We’ve sent you an email with a link to finish resetting your password.";
+
+		if(this.resetMessage.getText().contains(forgotMessage)) {
+			resettingMessage=true;
+		}
+
+		return resettingMessage;
+	}
+	public boolean verifyForgotPasswordB(WebDriver driver) {
+		boolean loginError=false;
+		this.loginButton.click();
+
+		String actualErrorMessage=loginErrorMessage.getText();
+		String expectedErrorMessage="Please check your username and password. If you still can't log in, contact your Salesforce administrator.";
+		if(actualErrorMessage.equals(expectedErrorMessage)) {
+			loginError=true;
+		}
+		return loginError;
+	}
+	
+
 }
