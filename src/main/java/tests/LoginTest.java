@@ -57,6 +57,8 @@ public class LoginTest extends BaseTest{
 		//launch the SFDC app in browser
 		driver.get(DataUtils.readLoginTestData("app.url"));
 		driver.manage().timeouts().implicitlyWait(WaitConstants.IMPLICIT_WAIT_DURATION);
+		driver.manage().timeouts().scriptTimeout(WaitConstants.IMPLICIT_WAIT_DURATION);
+    driver.manage().timeouts().pageLoadTimeout(WaitConstants.IMPLICIT_WAIT_DURATION);
 		//Enter valid username
 		//lp.username.sendKeys(DataUtils.readLoginTestData("valid.username"));
 		
