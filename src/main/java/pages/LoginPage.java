@@ -121,9 +121,9 @@ public class LoginPage extends BasePage {
 		password.sendKeys(passWord);
 		loginButton.click();
 		logger.info("Should be signed in to application");
-		Duration duration = Duration.ofSeconds(10);
-		WebDriverWait wait =new WebDriverWait(driver, duration);
-		wait.until(ExpectedConditions.titleContains("Home"));
+		//Duration duration = Duration.ofSeconds(10);
+		//WebDriverWait wait =new WebDriverWait(driver, duration);
+		//wait.until(ExpectedConditions.titleContains("Home"));
 
 		String title=driver.getTitle();
 		//System.out.println(title);
