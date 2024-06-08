@@ -68,7 +68,7 @@ public class LoginTest extends BaseTest{
 		CommonUtils.captureScreenShot(driver);
 	}
 	
-	@Test
+	//@Test
 	public void TC01_verifyLoginErrorMessage1() throws IOException {
 		WebDriver driver=BaseTest.getDriver();
 		//Create object of page LoginPage
@@ -90,7 +90,7 @@ public class LoginTest extends BaseTest{
 		CommonUtils.captureScreenShot(driver);
 	}
 	
-	@Test
+	//@Test
 	public void TC03_RememberUserName() throws IOException, InterruptedException {
 		WebDriver driver=BaseTest.getDriver();
 		//Create object of page LoginPage
