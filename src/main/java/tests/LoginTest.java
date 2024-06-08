@@ -9,6 +9,7 @@ import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
@@ -45,7 +46,6 @@ public class LoginTest extends BaseTest{
 	
 	@Test
 	public void TC02_loginWithValidCredentials() throws IOException {
-		
 		test = BaseTest.threadExtentTest.get();
 		WebDriver driver=BaseTest.getDriver();
 		
@@ -56,17 +56,14 @@ public class LoginTest extends BaseTest{
 	
 		//launch the SFDC app in browser
 		driver.get(DataUtils.readLoginTestData("app.url"));
+		driver.manage().timeouts().implicitlyWait(WaitConstants.IMPLICIT_WAIT_DURATION);
 		//Enter valid username
-		lp.username.sendKeys(DataUtils.readLoginTestData("valid.username"));
-		test.log(Status.INFO, "username is entered");
+		//lp.username.sendKeys(DataUtils.readLoginTestData("valid.username"));
 		
-		//Enter valid password
-		lp.password.sendKeys(DataUtils.readLoginTestData("valid.password"));
-		test.log(Status.INFO, "password is entered");
-		
-		//Click Log-In button
-		lp.loginButton.click();
-		test.log(Status.INFO, "Log-in button is clicked");
+		//login with valid credentials
+		Assert.assertTrue((lp.logintoSFDC(DataUtils.readLoginTestData("valid.username"),
+				DataUtils.readLoginTestData("valid.password"),driver)),"TC02: FAil unable to login");
+		CommonUtils.captureScreenShot(driver);
 	}
 	
 	@Test
@@ -75,23 +72,20 @@ public class LoginTest extends BaseTest{
 		//Create object of page LoginPage
 		LoginPage lp=new LoginPage(driver);
 		
-		
-		//driver.manage().timeouts().implicitlyWait(WaitConstants.IMPLICIT_WAIT_DURATION);	
 		//launch the SFDC app in browser
 		driver.get(DataUtils.readLoginTestData("app.url"));
+		driver.manage().timeouts().implicitlyWait(WaitConstants.IMPLICIT_WAIT_DURATION);
+		
 		//Enter valid username
-		lp.username.sendKeys(DataUtils.readLoginTestData("valid.username"));
+		Assert.assertTrue(lp.enterUsername(DataUtils.readLoginTestData("valid.username")), "Issue in entering Username");
+		
 		//Clear password
-		lp.password.clear();
-		//Click Log-In button
-		lp.loginButton.click();
-		//get the login error message
-		String errorMessage1=lp.loginErrorMessage.getText();
+		Assert.assertTrue(lp.clearPassword(), "Issue in clearing password field");
+
 		
+		//Click Log-In button and verify Login error
+		Assert.assertTrue(lp.verifyLoginError(driver),"TC01--> Fail");
 		CommonUtils.captureScreenShot(driver);
-	
-		Assert.assertEquals(errorMessage1, "Please enter your password.", "TC01--> Fail");
-		
 	}
 	
 	@Test
@@ -102,21 +96,23 @@ public class LoginTest extends BaseTest{
 		
 		//launch the SFDC app in browser
 		driver.get(DataUtils.readLoginTestData("app.url"));
+		
+		//Login using valid credentials
 		//Enter valid username
-		lp.username.sendKeys(DataUtils.readLoginTestData("valid.username"));
-		//Enter valid password
-		lp.password.sendKeys(DataUtils.readLoginTestData("valid.password"));
+				Assert.assertTrue(lp.enterUsername(DataUtils.readLoginTestData("valid.username")), "Issue in entering Username");
+		
+		//Enter valid pasword
+		Assert.assertTrue(lp.enterPassword(DataUtils.readLoginTestData("valid.password")), "Issue in entering password");
 		//Click Remember me
-		lp.rememberMe();
+		Assert.assertTrue(lp.rememberMe(),"Issue in selecting rememberMe");
 		//Click Log-In button
 		lp.loginButton.click();
 		//logout
-		lp.logout();
+		Assert.assertTrue(lp.logout(driver),"Issue in logging out");
 		
 		//verify username is retained
-		String unameTxtbox=lp.username.getAttribute("value");
-		Assert.assertEquals(unameTxtbox, DataUtils.readLoginTestData("valid.username"),"Valid username not retained");
-		
+		Assert.assertTrue(lp.verifyUsernameRetained(DataUtils.readLoginTestData("valid.username")),"TC03-->Fail Valid username not retained");
+			
 		
 	}
 
